@@ -16,8 +16,4 @@ export class SideMenuComponent {
   readonly ROUTER_TOKENS = ROUTER_TOKENS;
 
   constructor(private readonly pieService: PieService) {}
-
-  selectPie(id: string) {
-    this.pieService.setSelectedPie(id);
-  }
 }
