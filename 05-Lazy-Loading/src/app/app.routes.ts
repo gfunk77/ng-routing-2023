@@ -27,7 +27,7 @@ export const ROUTES: Routes = [
     component: HomeComponent,
   },
   {
-    path: `${ROUTER_TOKENS.SHOP}/:categoryId` ,
+    path: `${ROUTER_TOKENS.SHOP}/:categoryId`,
     component: ProductsViewComponent,
     children: PRODUCT_ROUTES,
   },
@@ -37,7 +37,8 @@ export const ROUTES: Routes = [
   },
   {
     path: ROUTER_TOKENS.ABOUT,
-    component: AboutComponent,
+    loadChildren: () =>
+      import('./about/about.module').then((m) => m.AboutModule),
   },
   {
     path: ROUTER_TOKENS.CHECKOUT,
