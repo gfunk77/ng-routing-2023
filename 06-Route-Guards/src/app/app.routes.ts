@@ -1,11 +1,13 @@
-import { Routes } from '@angular/router';
+import { Router, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { CartAuthGuard } from './cart-auth-route-guard';
+import { authRouteGuard } from './cart-auth-route-guard';
 import { HomeUpdatedComponent } from './home-updated/home-updated.component';
 import { FeatureFlagService } from './services/feature-flag.service';
 import { inject } from '@angular/core';
 import { map } from 'rxjs';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { NotReadyComponent } from './not-ready/not-ready.component';
 
 export enum ROUTER_TOKENS {
   HOME = 'home',
@@ -48,6 +50,19 @@ export const ROUTES: Routes = [
     path: ROUTER_TOKENS.CONTACT,
     loadComponent: () =>
       import('./contact/contact.component').then((m) => m.ContactComponent),
+    canActivate: [
+      () => {
+        const featureService = inject(FeatureFlagService);
+        const router = inject(Router);
+        return featureService.featureFlags.pipe(
+          map(
+            (flags) =>
+              !!flags.contact || router.parseUrl(`/${ROUTER_TOKENS.NOT_READY}`)
+          )
+        );
+      },
+      authRouteGuard(ROUTER_TOKENS.CONTACT),
+    ],
   },
   {
     path: ROUTER_TOKENS.ABOUT,
@@ -59,7 +74,15 @@ export const ROUTES: Routes = [
     outlet: ROUTER_TOKENS.CART,
     loadComponent: () =>
       import('./cart/cart.component').then((m) => m.CartComponent),
-    canActivate: [CartAuthGuard],
+    canActivate: [authRouteGuard(ROUTER_TOKENS.CART)],
+  },
+  {
+    path: ROUTER_TOKENS.NOT_AUTH,
+    component: NotAuthorizedComponent,
+  },
+  {
+    path: ROUTER_TOKENS.NOT_READY,
+    component: NotReadyComponent,
   },
   {
     path: '**',
