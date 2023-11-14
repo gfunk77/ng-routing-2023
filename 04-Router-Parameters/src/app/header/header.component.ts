@@ -8,24 +8,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [
-    MatMenuModule,
-    MatButtonModule,
-    RouterLink,
-    RouterLinkActive,
-  ],
+  imports: [MatMenuModule, MatButtonModule, RouterLink, RouterLinkActive],
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
   readonly Category = Category;
   readonly ROUTER_TOKENS = ROUTER_TOKENS;
-
-  private readonly pieService = inject(PieService);
-
-  changeCategory(category: Category){
-    this.pieService.setSelectedCategory(category);
-  }
-
 }
